@@ -44,7 +44,6 @@ class capthread(threading.Thread):
             try:
                 udp_header = packet[iph_length:iph_length + 8]
 
-                # now unpack them :)
                 udph = unpack('!HHH2s', udp_header)
 
                 source_port = udph[0]

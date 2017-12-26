@@ -8,6 +8,10 @@ ALL_PROTO_NUM=[1,6,17]
 ETH_P_ALL=0x0003
 ETH_P_IP=0x0800
 
+ETH_PROTO_IP=0x0800
+ETH_PROTO_ARP=0x0806
+ETH_PROTO_RARP=0x8035
+
 #pcap format:(eth_protocol,source_mac,destination_mac, version, ihl,
 #             typeofservice,totallength,identification,flags,fragmentoffset,
 #             ttl,protocol, s_addr, d_addr, source_port, dest_port,

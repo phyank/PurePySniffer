@@ -6,7 +6,7 @@ No Third-party Lib.
 
 Graphical User Interface. 
 
-Parse  Ethernet and IP headers and basically read high layer protocol. It can completely parse Ethernet and IP headers and basically read high layer protocol.
+It can completely parse Ethernet and IP headers and basically read high layer protocol.
 
 System Requirement: Linux
 

@@ -160,7 +160,7 @@ class capthread(threading.Thread):
                     totallength=iph[2]
                     identification=iph[3]
                     flagsandfo=iph[4]
-                    flags=flagsandfo & 0xe000
+                    flags=(flagsandfo & 0xe000)>>13
                     fragmentoffset=flagsandfo & 0x1fff
                     ttl = iph[5]
                     protocol = iph[6]

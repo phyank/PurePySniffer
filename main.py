@@ -139,7 +139,7 @@ topbottomframe.pack(side=BOTTOM, fill=BOTH)
 
 stext = ScrolledText(bottomframe)
 stext2 = ScrolledText(bottomframe)
-stextph = ScrolledText(topbottomframe, 70)
+stextph = ScrolledText(topbottomframe,0)
 
 fliter=fliter()
 

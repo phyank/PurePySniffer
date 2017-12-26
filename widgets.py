@@ -41,10 +41,12 @@ class slist(Frame):
         self.listbox = list
 
     def runCommand(self, selection):
+        try:
             self.stext.advancedsettext(1, self.db.pcap2show[selection][PCAP_DATA])
             self.stext2.advancedsettext(0, self.db.pcap2show[selection][PCAP_DATA])
             self.stextph.setheader(self.db.pcap2show[selection])
-
+        except:
+             print("Index Out of Range")
 
     def list_label(self,p):
         if p[PCAP_ETH_PROTO]==0x0800:
@@ -87,7 +89,10 @@ class ScrolledText(Frame):
 
     def makewidgets(self):
         tsbar = Scrollbar(self)
-        text = Text(self, width=self.width, relief=SUNKEN)
+        if self.width:
+            text = Text(self, width=self.width, relief=SUNKEN)
+        else:
+            text = Text(self, relief=SUNKEN)
         tsbar.config(command=text.yview)
         text.config(yscrollcommand=tsbar.set)
         tsbar.pack(side=RIGHT, fill=Y)

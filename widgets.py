@@ -392,55 +392,107 @@ class StartBox:
             self.fliter.reinit()
             #srcm=(self.srcmac.get()).lower()
             #dstm=(self.destmac.get()).lower()
+
+
+
             srcin=self.srcip.get()
             dstin=self.destip.get()
 
-            # if (re.findall(r'(^([0-9a-f]{1,2}[:]){5}([0-9a-f]{1,2})$)|(^$)', srcm)):
+            while True:
+               src=re.search('( |;|,)?((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', srcin)
+               if src:
+                  end=src.end()
+                  src=src.group()
+                  src=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', src)
+                  src=src.group()
+                  self.fliter.src_ip.append(src)
+                  srcin=srcin[end:]
+                  continue
+               else:
+                  if srcin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Source IP Address")
+                     return
 
-            src=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', srcin)
-            dst=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', dstin)
+            while True:
+               dst=re.search('( |;|,)?((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', dstin)
+               if dst:
+                  end=dst.end()
+                  dst=dst.group()
+                  dst=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', dst)
+                  dst=dst.group()
+                  self.fliter.des_ip.append(dst)
+                  dstin=dstin[end:]
+                  continue
+               else:
+                  if dstin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Destination IP Address")
+                     return
 
-            if src:
-                src=src.group()
-                self.fliter.src_ip.append(src)
-            else:
-                if srcin=='':
-                    pass
-                else:
-                    showerror("Error","Invalid IP Address")
-                    return
-
-            if dst:
-                dst=dst.group()
-                self.fliter.des_ip.append(dst)
-            else:
-                if dstin=='':
-                    pass
-                else:
-                    showerror("Error","Invalid IP Address")
-                    return
 
             sportin = self.sport.get()
             dportin = self.dstport.get()
-            if sportin:
-                if re.match('^([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', sportin):
-                    sportin = eval(sportin)
-                else:
-                    showerror('Error', "Invalid Source Port")
-                    return
-                self.fliter.src_port.append(sportin)
-            else:
-                pass
 
-            if dportin:
-                if re.match('^([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', dportin):
-                    dportin = eval(dportin)
-                else:
-                    showerror('Error', "Invalid Dest Port")
-                    return
-                self.fliter.des_port.append(dportin)
-            else:
-                pass
+
+            while True:
+               srcp=re.search('( |;|,)?(([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d)', sportin)
+               if srcp:
+                  end=srcp.end()
+                  srcp=srcp.group()
+                  srcp=re.search('([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', srcp)
+                  srcp=srcp.group()
+                  self.fliter.src_port.append(eval(srcp))
+                  sportin=sportin[end:]
+                  continue
+               else:
+                  if sportin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Source Port")
+                     return
+
+
+            while True:
+               dstp=re.search('( |;|,)?(([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d)', dportin)
+               if dstp:
+                  end=dstp.end()
+                  dstp=dstp.group()
+                  dstp=re.search('([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', dstp)
+                  dstp=dstp.group()
+                  self.fliter.des_port.append(eval(dstp))
+                  dportin=dportin[end:]
+                  continue
+               else:
+                  if dportin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Destination Port")
+                     return
+
+
+
+#            if sportin:
+#                if re.match('^([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', sportin):
+#                    sportin = eval(sportin)
+#                else:
+#                    showerror('Error', "Invalid Source Port")
+#                    return
+#                self.fliter.src_port.append(sportin)
+#            else:
+#                pass
+
+#            if dportin:
+#                if re.match('^([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', dportin):
+#                    dportin = eval(dportin)
+#                else:
+#                    showerror('Error', "Invalid Dest Port")
+#                    return
+#                self.fliter.des_port.append(dportin)
+#            else:
+#                pass
 
 
 
@@ -508,54 +560,79 @@ class StartBox:
 
             sportin=self.sport.get()
             dportin=self.dstport.get()
-            if sportin:
-                if re.match('^([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d',sportin):
-                        sportin=eval(sportin)
-                else:
-                    showerror('Error', "Invalid Source Port")
-                    return
-                self.fliter.src_port.append(sportin)
-            else:
-                pass
 
-            if dportin:
-                if re.match('^([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', dportin):
-                    dportin=eval(dportin)
-                else:
-                    showerror('Error',"Invalid Dest Port")
-                    return
-                self.fliter.des_port.append(dportin)
-            else:
-                pass
+            while True:
+               srcp=re.search('( |;|,)?(([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d)', sportin)
+               if srcp:
+                  end=srcp.end()
+                  srcp=srcp.group()
+                  srcp=re.search('([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', srcp)
+                  srcp=srcp.group()
+                  self.fliter.src_port.append(eval(srcp))
+                  sportin=sportin[end:]
+                  continue
+               else:
+                  if sportin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Source Port")
+                     return
+
+
+            while True:
+               dstp=re.search('( |;|,)?(([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d)', dportin)
+               if dstp:
+                  end=dstp.end()
+                  dstp=dstp.group()
+                  dstp=re.search('([1-6][0-5][0-5][0-3][0-5])|([1-9]\d\d\d)|([1-9]\d\d)|([1-9]\d)|\d', dstp)
+                  dstp=dstp.group()
+                  self.fliter.des_port.append(eval(dstp))
+                  dportin=dportin[end:]
+                  continue
+               else:
+                  if dportin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Destination Port")
+                     return
+
 
             srcin=self.srcip.get()
             dstin=self.destip.get()
 
-            # if (re.findall(r'(^([0-9a-f]{1,2}[:]){5}([0-9a-f]{1,2})$)|(^$)', srcm)):
+            while True:
+               src=re.search('( |;|,)?((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', srcin)
+               if src:
+                  end=src.end()
+                  src=src.group()
+                  src=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', src)
+                  src=src.group()
+                  self.fliter.src_ip.append(src)
+                  srcin=srcin[end:]
+                  continue
+               else:
+                  if srcin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Source IP Address")
+                     return
 
-            src=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', srcin)
-            dst=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', dstin)
-
-            if src:
-                src=src.group()
-                self.fliter.src_ip.append(src)
-            else:
-                if srcin=='':
-                    pass
-                else:
-                    showerror("Error","Invalid IP Address")
-                    return
-
-            if dst:
-                dst=dst.group()
-                self.fliter.des_ip.append(dst)
-            else:
-                if dstin=='':
-                    pass
-                else:
-                    showerror("Error","Invalid IP Address")
-                    return
-
+            while True:
+               dst=re.search('( |;|,)?((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', dstin)
+               if dst:
+                  end=dst.end()
+                  dst=dst.group()
+                  dst=re.search('((([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])\.){3}(([01][0-9][0-9])|(2[0-4][0-9])|(25[0-5])|([0-9]{2})|[0-9])', dst)
+                  dst=dst.group()
+                  self.fliter.des_ip.append(dst)
+                  dstin=dstin[end:]
+                  continue
+               else:
+                  if dstin=='':
+                     break
+                  else:
+                     showerror("Error","Invalid Destination IP Address")
+                     return
 
 
             proto = ALL_PROTO_NUM

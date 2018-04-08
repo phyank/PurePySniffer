@@ -6,33 +6,7 @@ from binascii import hexlify
 import os
 from threads import *
 
-def tcp_flag(flags):
-    info=''
-    cwr=(flags & 0b10000000)>>7
-    ece=(flags & 0b01000000)>>6
-    urg=(flags & 0b00100000)>>5
-    ack=(flags & 0b00010000)>>4
-    psh=(flags & 0b00001000)>>3
-    rst=(flags & 0b00000100)>>2
-    syn=(flags & 0b00000010)>>1
-    fin=(flags & 0b00000001)
-    if cwr:
-        info+='\n  --Congestion Window Reduced'
-    if ece:
-        info+='\n  --ECE Echo: Congestion'
-    if urg:
-        info+='\n  --Urgent'
-    if ack:
-        info+='\n  --ACK'
-    if psh:
-        info+='\n  --Push Flag'
-    if rst:
-        info+='\n  --RST'
-    if syn:
-        info+='\n  --SYN'
-    if fin:
-        info+='\n  --FIN'
-    return info
+
 
 class slist(Frame):
     def __init__(self, db, stext, stext2, stextph, options, mutex, parent,fliter):

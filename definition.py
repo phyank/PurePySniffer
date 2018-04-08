@@ -1,7 +1,7 @@
 from io import StringIO
 import re,queue,threading
 
-MAIN_TITLE='PySniffer'
+MAIN_TITLE='PurePySniffer'
 
 ALL_PROTO_NUM=[1,6,17]
 #from if_ether.h

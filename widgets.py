@@ -6,6 +6,34 @@ from binascii import hexlify
 import os
 from threads import *
 
+def tcp_flag(flags):
+    info=''
+    cwr=(flags & 0b10000000)>>7
+    ece=(flags & 0b01000000)>>6
+    urg=(flags & 0b00100000)>>5
+    ack=(flags & 0b00010000)>>4
+    psh=(flags & 0b00001000)>>3
+    rst=(flags & 0b00000100)>>2
+    syn=(flags & 0b00000010)>>1
+    fin=(flags & 0b00000001)
+    if cwr:
+        info+='\n  --Congestion Window Reduced'
+    if ece:
+        info+='\n  --ECE Echo: Congestion'
+    if urg:
+        info+='\n  --Urgent'
+    if ack:
+        info+='\n  --ACK'
+    if psh:
+        info+='\n  --Push Flag'
+    if rst:
+        info+='\n  --RST'
+    if syn:
+        info+='\n  --SYN'
+    if fin:
+        info+='\n  --FIN'
+    return info
+
 class slist(Frame):
     def __init__(self, db, stext, stext2, stextph, options, mutex, parent,fliter):
         Frame.__init__(self, parent)
@@ -41,12 +69,12 @@ class slist(Frame):
         self.listbox = list
 
     def runCommand(self, selection):
-        try:
+        #try:
             self.stext.advancedsettext(1, self.db.pcap2show[selection][PCAP_DATA])
             self.stext2.advancedsettext(0, self.db.pcap2show[selection][PCAP_DATA])
             self.stextph.setheader(self.db.pcap2show[selection])
-        except:
-             print("Index Out of Range")
+        #except:
+        #     print("Index Out of Range")
 
     def list_label(self,p):
         if p[PCAP_ETH_PROTO]==0x0800:
@@ -135,6 +163,7 @@ class ScrolledText(Frame):
                    "\n Flags : "+flagstring+\
                    "\n Fragment Offset : "+str(f_offset)+\
                    '\n TTL : ' + str(ttl) +\
+                   '\n Protocol(IP Header):'+str(protocol)+\
                    '\n Source Address : ' + str(s_addr) +\
                    '\n Destination Address : ' + str(d_addr)+\
                    '\n IP Header Checksum : '+hexlify(iph_chksum).decode('ascii','ignore')
@@ -149,12 +178,22 @@ class ScrolledText(Frame):
                 out += '\n\nProtocol:TCP'
                 if source_port==UNDEFINED:
                     out+="\n Package seems to be damaged.See data."
+                    print("DAMAGED")
                 else:
-                    out+='\n Source Port : ' + str(source_port) +\
-                         '\n' + ' Dest Port : ' + str(dest_port) +\
-                         '\n' + ' Sequence Number : ' +str(protocol_opt[1]) +\
-                         '\n' + ' Acknowledgement : ' + str(protocol_opt[2]) +\
-                         '\n' + ' TCP header length : ' + str(protocol_opt[3])+'\n\n'
+                    if protocol_opt[6]: 
+                        chksum = hex(protocol_opt[6])
+                    else:
+                        chksum = 'None'
+                    urgent=str(protocol_opt[7])
+                    out+='\n Source Port : ' + str(source_port)
+                    out+='\n' + ' Dest Port : ' + str(dest_port)
+                    out+='\n' + ' Sequence Number : ' +str(protocol_opt[1])
+                    out+='\n' + ' Acknowledgement : ' + str(protocol_opt[2])
+                    out+='\n' + ' TCP header length : ' + str(protocol_opt[3])
+                    out+='\n' + ' Control Flags : ' + (tcp_flag(protocol_opt[4]))
+                    out+='\n' + ' Window Size : ' + str(protocol_opt[5])
+                    out+='\n' + ' Checksum(TCP) : ' + chksum
+                    out+='\n' + ' Urgent Pointer : ' + urgent +'\n\n'
             elif protocol == PROTO_UDP:
                 out += '\n\nProtocol:UDP'
                 if source_port==UNDEFINED:

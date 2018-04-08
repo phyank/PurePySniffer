@@ -19,25 +19,38 @@ class capthread(threading.Thread):
         if protocol == 6:
             try:
                 tcp_header = packet[iph_length:iph_length + 20]
-                tcph = unpack('!HHLLBBHHH', tcp_header)
-
+                try:
+                    tcph = unpack('!HHLLBBHHH', tcp_header)
+                except:
+                    tcph = unpack('!HHLLBBH', tcp_header)
 
                 source_port = tcph[0]
                 dest_port = tcph[1]
                 sequence = tcph[2]
                 acknowledgement = tcph[3]
                 doff_reserved = tcph[4]
+                ctrl_flags=tcph[5]
+                window_size=tcph[6]
+                try:
+                    chksum=tcph[7]
+                    urgent_pointer=tcph[8]
+                except:
+                    chksum=0
+                    urgent_pointer=0
+
                 tcph_length = doff_reserved >> 4
 
                 h_size = iph_length + tcph_length * 4
                 data_size = len(packet) - h_size
 
                 # get data from the packet
+
                 data = packet[h_size:]
 
-                protocol_opt = (tcph, sequence, acknowledgement, tcph_length)
+                protocol_opt = (tcph, sequence, acknowledgement, tcph_length,ctrl_flags,window_size,chksum,urgent_pointer)
                 return source_port, dest_port, protocol_opt, data
             except:
+                print(tcp_header)
                 return UNDEFINED,UNDEFINED,UNDEFINED,packet
 
         elif protocol == 17:

@@ -69,12 +69,12 @@ class slist(Frame):
         self.listbox = list
 
     def runCommand(self, selection):
-        #try:
+        try:
             self.stext.advancedsettext(1, self.db.pcap2show[selection][PCAP_DATA])
             self.stext2.advancedsettext(0, self.db.pcap2show[selection][PCAP_DATA])
             self.stextph.setheader(self.db.pcap2show[selection])
-        #except:
-        #     print("Index Out of Range")
+        except:
+             print("Index Out of Range")
 
     def list_label(self,p):
         if p[PCAP_ETH_PROTO]==0x0800:
